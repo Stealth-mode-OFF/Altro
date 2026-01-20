@@ -9,8 +9,8 @@ import {
 const CONFIG = {
   // FIXED: Resend uses single global API endpoint for all regions (EU API keys work with api.resend.com)
   RESEND_API_URL: 'https://api.resend.com/emails',
-  // FIXED: Changed from send.altrodatony.com to altrodatony.com (verified domain in Resend)
-  EMAIL_FROM: 'Altro da Tony <info@altrodatony.com>',
+  // FIXED: Using verified subdomain 'send.altrodatony.com' found in DNS records
+  EMAIL_FROM: '"Altro da Tony (Rezervace)" <info@send.altrodatony.com>',
   EMAIL_REPLY_TO: 'info@altrodatony.com',
   EMAIL_BCC: 'antoniosahulka@seznam.cz',
   // Used for admin links
@@ -38,9 +38,8 @@ async function sendEmail(
   options: { skipBcc?: boolean } = {}
 ): Promise<EmailResult> {
   const rawApiKey = Deno.env.get('RESEND_API_KEY');
-  // FIXED: Keep hyphens (-) in API key! Resend format: re_xxxxx-xxxxxxxxx
-  // Only strip dangerous characters (newlines, unicode, quotes)
-  const apiKey = rawApiKey ? rawApiKey.replace(/[^a-zA-Z0-9_-]/g, '') : '';
+  // FIXED: Just trim whitespace. Do not strip other characters as it might corrupt valid keys.
+  const apiKey = rawApiKey ? rawApiKey.trim() : '';
   
   if (!apiKey) {
     console.error('❌ CRITICAL: RESEND_API_KEY is missing');
