@@ -1,0 +1,83 @@
+$TTL 3600
+; Zone: altrodatony.com. (#598394)
+; Complete DNS zone with Figma hosting, Endora email, and Resend integration
+; Updated: Monday, December 29, 2025
+$ORIGIN altrodatony.com.
+
+@	IN SOA	ns1.endora.cz. hostmaster.endora.cz. (
+	2025122913	  ; Serial (UPDATED!)
+	28800     	  ; Refresh
+	7200      	  ; Retry
+	604800    	  ; Expire
+	10800     	) ; Minimum
+
+; ======================================
+; NAME SERVERS
+; ======================================
+@                      	3600	IN NS   	ns1.endora.cz.
+@                      	3600	IN NS   	ns2.endora.cz.
+@                      	3600	IN NS   	ns3.endoraland.com.
+
+; ======================================
+; FIGMA HOSTING - Website
+; ======================================
+; Root domain points to Figma
+@                      	3600	IN A    	204.69.207.1
+
+; WWW subdomain points to Figma
+www                    	3600	IN CNAME	sites.figma.net.
+
+; Figma domain verification
+_figma_sites_verify_www	3600	IN TXT  	"v=e765e562-3888-4038-9776-a6761d9"
+
+; ======================================
+; EMAIL - INCOMING (Endora Servers)
+; ======================================
+; MX Records - Email servers for receiving mail at *@altrodatony.com
+@                      	3600	IN MX   	5 email1.endora.cz.
+@                      	3600	IN MX   	5 email2.endora.cz.
+@                      	3600	IN MX   	5 email3.endora.cz.
+@                      	3600	IN MX   	5 email4.endora.cz.
+
+; Mail server hostnames
+mail                   	3600	IN A    	62.109.151.33
+smtp                   	3600	IN A    	62.109.151.33
+
+; Email autoconfiguration
+autoconfig             	3600	IN CNAME	autoconfig.endora.cz.
+_autodiscover._tcp     	3600	IN SRV  	0 0 443 autodiscover.webglobe.cz.
+
+; ======================================
+; EMAIL - OUTGOING (Resend API)
+; ======================================
+; MX Record for send subdomain (return-path for bounces/complaints)
+send                   	3600	IN MX   	10 feedback-smtp.eu-west-1.amazonses.com.
+
+; SPF for send subdomain (authorizes Amazon SES)
+send                   	3600	IN TXT  	"v=spf1 include:amazonses.com ~all"
+
+; ======================================
+; EMAIL AUTHENTICATION
+; ======================================
+; SPF - Authorizes both Endora and Resend to send emails
+@                      	3600	IN TXT  	"v=spf1 a mx include:_spf.endora.cz include:_spf.resend.com -all"
+
+; DKIM - Resend email signing
+resend._domainkey      	3600	IN TXT  	"p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDtRjwn90G3PaiQQVpNzOZ8SyXTDx4RgxLw5zlWz4rJCxxfS8dYKrLBBqELE4upth8HPnI+Ys79HUyxMuHSxCOZX9ONrY3/jUR92V+vmaSHAI0NCTtlpnFQBtA1l0R4PXBzDjG1S3KQs0JThz3niYeA072GUiyEMdXnV3SyXvbZtwIDAQAB"
+
+; DKIM - Seznam.cz email signing (if using Seznam mailbox)
+szn20221014._domainkey 	3600	IN CNAME	szn20221014._domainkey.seznam.cz.
+
+; DMARC - Email authentication policy
+_dmarc                 	3600	IN TXT  	"v=DMARC1; p=none;"
+
+; ======================================
+; NOTES
+; ======================================
+; 1. Website: Hosted on Figma (204.69.207.1)
+; 2. Email Receiving: Endora mail servers (email1-4.endora.cz)
+; 3. Email Sending: Resend API via Amazon SES
+; 4. Return-path: send.altrodatony.com for bounce/complaint tracking
+; 5. Authentication: SPF includes both Endora and Resend
+; 6. DKIM: Both Resend and Seznam.cz keys configured
+; 7. Serial incremented: 2025122912 → 2025122913

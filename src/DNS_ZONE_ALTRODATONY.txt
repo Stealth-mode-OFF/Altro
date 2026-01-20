@@ -1,0 +1,64 @@
+$TTL 3600
+; Zone: altrodatony.com. (#598394)
+; File updated for Figma hosting on Tue Dec 09 2024
+; Email functionality preserved (Endora mail servers)
+$ORIGIN altrodatony.com.
+
+@	IN SOA	ns1.endora.cz. hostmaster.endora.cz. (
+	2025120903	  ; Serial (UPDATED - increment when making changes)
+	28800     	  ; Refresh
+	7200      	  ; Retry
+	604800    	  ; Expire
+	10800     	) ; Minimum
+
+; ======================================
+; FIGMA HOSTING DNS RECORDS (REQUIRED)
+; ======================================
+; Root domain (@) points to Figma's server
+@                  	3600	IN A    	204.69.207.1
+
+; WWW subdomain points to Figma via CNAME
+www                	3600	IN CNAME	sites.figma.net.
+
+; Figma domain verification TXT record
+_figma_sites_verify_www	3600	IN TXT  	"v=e765e562-3888-4038-9776-a6761d9"
+
+; ======================================
+; EMAIL CONFIGURATION (PRESERVED)
+; ======================================
+; MX Records - Email servers (Endora)
+@                  	3600	IN MX   	5 email1.endora.cz.
+@                  	3600	IN MX   	5 email2.endora.cz.
+@                  	3600	IN MX   	5 email3.endora.cz.
+@                  	3600	IN MX   	5 email4.endora.cz.
+
+; Mail server hostnames
+mail               	3600	IN A    	62.109.151.33
+smtp               	3600	IN A    	62.109.151.33
+
+; Email autoconfiguration
+autoconfig         	3600	IN CNAME	autoconfig.endora.cz.
+_autodiscover._tcp 	3600	IN SRV  	0 0 443 autodiscover.webglobe.cz.
+
+; SPF record - Authorized email senders
+@                  	3600	IN TXT  	"v=spf1 a mx include:_spf.endora.cz -all"
+
+; DMARC policy - Email authentication
+_dmarc             	3600	IN TXT  	"v=DMARC1; p=none;"
+
+; ======================================
+; NAME SERVERS (PRESERVED)
+; ======================================
+@                  	3600	IN NS   	ns1.endora.cz.
+@                  	3600	IN NS   	ns2.endora.cz.
+@                  	3600	IN NS   	ns3.endoraland.com.
+
+; ======================================
+; NOTES
+; ======================================
+; 1. REMOVED: Wildcard A record (* → 62.109.151.80) - not needed with Figma hosting
+; 2. CHANGED: Root A record (@ → 204.69.207.1) - points to Figma now
+; 3. ADDED: www CNAME → sites.figma.net
+; 4. ADDED: _figma_sites_verify_www TXT record for domain verification
+; 5. PRESERVED: All email MX records and related DNS entries
+; 6. Serial number incremented: 2025120902 → 2025120903

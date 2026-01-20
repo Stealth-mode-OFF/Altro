@@ -1,0 +1,39 @@
+$TTL 3600
+$ORIGIN altrodatony.com.
+
+@	IN SOA	ns1.endora.cz. hostmaster.endora.cz. (
+	2025122926
+	28800
+	7200
+	604800
+	10800
+)
+
+@	IN NS	ns1.endora.cz.
+@	IN NS	ns2.endora.cz.
+@	IN NS	ns3.endoraland.com.
+
+@	IN A	204.69.207.1
+
+@	IN MX	5 email1.endora.cz.
+@	IN MX	5 email2.endora.cz.
+@	IN MX	5 email3.endora.cz.
+@	IN MX	5 email4.endora.cz.
+
+@	IN TXT	"v=spf1 a mx include:_spf.endora.cz include:_spf.resend.com -all"
+
+www	IN CNAME	sites.figma.net.
+mail	IN A	62.109.151.33
+smtp	IN A	62.109.151.33
+autoconfig	IN CNAME	autoconfig.endora.cz.
+
+resend._domainkey	IN TXT	"p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDtRjwn90G3PaiQQVpNzOZ8SyXTDx4RgxLw5zlWz4rJCxxfS8dYKrLBBqELE4upth8HPnI+Ys79HUyxMuHSxCOZX9ONrY3/jUR92V+vmaSHAI0NCTtlpnFQBtA1l0R4PXBzDjG1S3KQs0JThz3niYeA072GUiyEMdXnV3SyXvbZtwIDAQAB"
+
+send	IN MX	10 feedback-smtp.eu-west-1.amazonses.com.
+send	IN TXT	"v=spf1 include:amazonses.com ~all"
+
+szn20221014._domainkey	IN CNAME	szn20221014._domainkey.seznam.cz.
+
+_autodiscover._tcp	IN SRV	0 0 443 autodiscover.webglobe.cz.
+_dmarc	IN TXT	"v=DMARC1; p=none;"
+_figma_sites_verify_www	IN TXT	"v=e765e562-3888-4038-9776-a6761d9"
