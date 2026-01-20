@@ -1,0 +1,31 @@
+$TTL 3600
+; Zone: altrodatony.com. (#598394)
+; File written on Mon Dec 29 15:30:00 2025
+$ORIGIN altrodatony.com.
+
+@	IN SOA	ns1.endora.cz. hostmaster.endora.cz. (
+	2025122922	  ; Serial
+	28800     	  ; Refresh
+	7200      	  ; Retry
+	604800    	  ; Expire
+	10800     	) ; Minimum
+                        	3600	IN A    	204.69.207.1
+                        	3600	IN MX   	5 email1.endora.cz.
+                        	3600	IN MX   	5 email2.endora.cz.
+                        	3600	IN MX   	5 email3.endora.cz.
+                        	3600	IN MX   	5 email4.endora.cz.
+                        	3600	IN NS   	ns1.endora.cz.
+                        	3600	IN NS   	ns2.endora.cz.
+                        	3600	IN NS   	ns3.endoraland.com.
+                        	3600	IN TXT  	"v=spf1 a mx include:_spf.endora.cz include:_spf.resend.com -all"
+autoconfig              	3600	IN CNAME	autoconfig.endora.cz.
+mail                    	3600	IN A    	62.109.151.33
+smtp                    	3600	IN A    	62.109.151.33
+www                     	3600	IN CNAME	sites.figma.net.
+resend._domainkey       	3600	IN TXT  	"p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDtRjwn90G3PaiQQVpNzOZ8SyXTDx4RgxLw5zlWz4rJCxxfS8dYKrLBBqELE4upth8HPnI+Ys79HUyxMuHSxCOZX9ONrY3/jUR92V+vmaSHAI0NCTtlpnFQBtA1l0R4PXBzDjG1S3KQs0JThz3niYeA072GUiyEMdXnV3SyXvbZtwIDAQAB"
+send                    	3600	IN MX   	10 feedback-smtp.eu-west-1.amazonses.com.
+send                    	3600	IN TXT  	"v=spf1 include:amazonses.com ~all"
+szn20221014._domainkey  	3600	IN CNAME	szn20221014._domainkey.seznam.cz.
+_autodiscover._tcp      	3600	IN SRV  	0 0 443 autodiscover.webglobe.cz.
+_dmarc                  	3600	IN TXT  	"v=DMARC1; p=none;"
+_figma_sites_verify_www 	3600	IN TXT  	"v=e765e562-3888-4038-9776-a6761d9"
