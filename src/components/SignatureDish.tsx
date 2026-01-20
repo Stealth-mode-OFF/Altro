@@ -2,7 +2,7 @@ import { motion } from 'motion/react';
 import { Flame, Award, ArrowRight } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { ImageWithFallback } from './figma/ImageWithFallback';
-import pizzaImage from "figma:asset/1bddbe9ae8f57fcbed8c6e69e6e4c68f75f1fee3.png";
+import pizzaImage from "../assets/37bb8a659a4a3f6604f817c626f331b3541fff8a.png";
 
 export function SignatureDish() {
   const { language } = useLanguage();
