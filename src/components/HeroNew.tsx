@@ -2,8 +2,7 @@ import { ImageWithFallback } from './figma/ImageWithFallback';
 import { Clock, Calendar, UtensilsCrossed, Phone } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useLanguage } from '../contexts/LanguageContext';
-import heroBackground from "figma:asset/25aa2f7917174e5633532ace212d5bcf77b22ebd.png";
-import logoImage from "figma:asset/8e479ee20a3f29f31855e79e992e8c5be3d12322.png";
+import heroBackground from "../assets/25aa2f7917174e5633532ace212d5bcf77b22ebd.png";
 
 export function HeroNew() {
   const { t, language } = useLanguage();
