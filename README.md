@@ -1,7 +1,6 @@
+# Restaurant Website Clone
 
-  # Restaurant Website Clone
-
-  This is a code bundle for Restaurant Website Clone. The original project is available at https://www.figma.com/design/IFN3Gh2tjGETLVd2hv9CPS/Restaurant-Website-Clone.
+This is a code bundle for Restaurant Website Clone. The original project is available at [Figma project](https://www.figma.com/design/IFN3Gh2tjGETLVd2hv9CPS/Restaurant-Website-Clone).
 
 ## 🚀 Quick Deploy
 

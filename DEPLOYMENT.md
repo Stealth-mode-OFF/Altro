@@ -5,6 +5,7 @@ This repository is configured for deployment on multiple platforms. Choose the o
 ## Prerequisites
 
 Before deploying, ensure you have:
+
 - ✅ All dependencies installed (`npm install`)
 - ✅ Environment variables configured (see `.env.example`)
 - ✅ Supabase project set up (if using database features)
@@ -13,31 +14,34 @@ Before deploying, ensure you have:
 
 ### 1. GitHub Pages (Automatic)
 
-**✨ Easiest Option - No Additional Setup Required**
+#### ✨ Easiest Option - No Additional Setup Required
 
 The repository includes a GitHub Actions workflow that automatically deploys to GitHub Pages on every push to the `main` branch.
 
-**Setup Steps:**
+Setup Steps:
+
 1. Go to your GitHub repository
 2. Navigate to **Settings → Pages**
 3. Under "Source", select **GitHub Actions**
 4. Push to `main` branch - deployment will happen automatically
 5. Your site will be available at: `https://stealth-mode-off.github.io/Altro/`
 
-**To trigger manual deployment:**
+To trigger manual deployment:
+
 - Go to **Actions** tab → **Deploy to GitHub Pages** → **Run workflow**
 
 ---
 
 ### 2. Vercel (Recommended)
 
-**⚡ Best for production sites with excellent performance**
+#### ⚡ Best for production sites with excellent performance
 
-**Deploy Now:**
+Deploy Now:
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/Stealth-mode-OFF/Altro)
 
-**Manual Setup:**
+Manual Setup:
+
 1. Install Vercel CLI: `npm i -g vercel`
 2. Run: `vercel`
 3. Follow the prompts
@@ -46,7 +50,8 @@ The repository includes a GitHub Actions workflow that automatically deploys to 
    - Add `VITE_SUPABASE_URL`
    - Add `VITE_SUPABASE_ANON_KEY`
 
-**Configuration:**
+Configuration:
+
 - Build command: `npm run build`
 - Output directory: `dist`
 - Install command: `npm install`
@@ -55,19 +60,22 @@ The repository includes a GitHub Actions workflow that automatically deploys to 
 
 ### 3. Netlify
 
-**🌟 Great alternative with excellent features**
+#### 🌟 Great alternative with excellent features
 
-**Deploy Now:**
+Deploy Now:
 
 [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/Stealth-mode-OFF/Altro)
 
-**Manual Setup:**
+Manual Setup:
+
 1. Install Netlify CLI: `npm i -g netlify-cli`
 2. Run: `netlify deploy`
 3. For production: `netlify deploy --prod`
 
-**Environment Variables:**
+Environment Variables:
+
 Add in Netlify dashboard under Site Settings → Environment Variables:
+
 - `VITE_SUPABASE_URL`
 - `VITE_SUPABASE_ANON_KEY`
 
@@ -109,21 +117,25 @@ VITE_MODE=production
 
 ## Custom Domain Setup
 
-### For Vercel:
+### For Vercel
+
 1. Go to Project Settings → Domains
 2. Add your custom domain
 3. Follow DNS configuration instructions
 
-### For Netlify:
+### For Netlify
+
 1. Go to Site Settings → Domain Management
 2. Add custom domain
 3. Configure DNS records
 
-### For GitHub Pages:
+### For GitHub Pages
+
 1. Go to Settings → Pages
 2. Add custom domain under "Custom domain"
 3. Add CNAME record to your DNS:
-   ```
+
+   ```txt
    CNAME @ stealth-mode-off.github.io
    ```
 
@@ -132,16 +144,19 @@ VITE_MODE=production
 ## Troubleshooting
 
 ### Build Fails
+
 - Ensure all dependencies are installed: `npm install`
 - Check for TypeScript errors: `npm run build`
 - Verify environment variables are set correctly
 
 ### White Screen After Deploy
+
 - Check browser console for errors
 - Verify base path in `vite.config.ts`
 - Ensure all assets are loading correctly
 
 ### Environment Variables Not Working
+
 - Prefix all environment variables with `VITE_`
 - Restart development server after adding new variables
 - Re-deploy after updating environment variables
@@ -151,6 +166,7 @@ VITE_MODE=production
 ## Performance Optimization
 
 The build is optimized with:
+
 - ✅ Code splitting for vendor and UI components
 - ✅ Minification with esbuild
 - ✅ Tree shaking for unused code
@@ -161,6 +177,7 @@ The build is optimized with:
 ## Continuous Deployment
 
 All platforms support automatic deployment:
+
 - **GitHub Pages**: Automatic on push to `main`
 - **Vercel**: Automatic on every git push
 - **Netlify**: Automatic on every git push
@@ -170,6 +187,7 @@ All platforms support automatic deployment:
 ## Support
 
 For deployment issues:
+
 1. Check the platform's status page
 2. Review build logs in the platform dashboard
 3. Consult platform-specific documentation:

@@ -1,9 +1,9 @@
 import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
-import chefImage from "figma:asset/e22ac4c178d2bbab1324e57e3d6e56436f52bc40.png";
+import chefImage from "../assets/e22ac4c178d2bbab1324e57e3d6e56436f52bc40.png";
 import { Users, Calendar, Clock, User, Phone, Mail, MessageSquare, Check, ChevronRight, Star, GlassWater, ChevronDown } from 'lucide-react';
-import { toast } from 'sonner@2.0.3';
+import { toast } from 'sonner';
 import { useLanguage } from '../contexts/LanguageContext';
 import { createReservation } from '../hooks/useApi';
 import { FlowingSection } from './premium/FlowingSection';
