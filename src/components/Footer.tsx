@@ -164,7 +164,7 @@ export function Footer() {
               {language === 'cs' ? 'Ochrana osobních údajů' : language === 'en' ? 'Privacy Policy' : 'Privacy'}
             </LegalLink>
             <LegalLink onClick={() => navigateToSection('/cookies')}>Cookies</LegalLink>
-            <LegalLink onClick={() => window.location.hash = 'admin'}>Admin</LegalLink>
+            <LegalLink href="/admin">Admin</LegalLink>
           </nav>
 
         </div>
@@ -207,12 +207,28 @@ function FooterLink({ children, onClick, highlight }: { children: React.ReactNod
   );
 }
 
-function LegalLink({ children, onClick }: { children: React.ReactNode; onClick: () => void }) {
+function LegalLink({
+  children,
+  onClick,
+  href,
+}: {
+  children: React.ReactNode;
+  onClick?: () => void;
+  href?: string;
+}) {
+  const className =
+    'text-xs font-medium text-stone-500 hover:text-primary transition-colors uppercase tracking-wider';
+
+  if (href) {
+    return (
+      <a href={href} className={className}>
+        {children}
+      </a>
+    );
+  }
+
   return (
-    <button
-      onClick={onClick}
-      className="text-xs font-medium text-stone-500 hover:text-primary transition-colors uppercase tracking-wider"
-    >
+    <button onClick={onClick} className={className}>
       {children}
     </button>
   );

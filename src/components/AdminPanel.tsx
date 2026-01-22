@@ -1,36 +1,14 @@
 import { useState, useEffect } from 'react';
-import { X, Plus, Trash2, Save, Edit2, Calendar, Lock, Unlock, UtensilsCrossed, Users, Book, Home, Shield } from 'lucide-react';
-import { motion, AnimatePresence } from 'motion/react';
+import { Calendar, Unlock, Users, Book, Home, Shield } from 'lucide-react';
 import { toast } from 'sonner@2.0.3';
 import { AdminDashboard } from './AdminDashboard';
 import { ReservationManager } from './ReservationManager';
 import { MainMenuAdmin } from './MainMenuAdmin';
 import { EmailDeliverability } from './EmailDeliverability';
-
-const getAdminPassword = () => {
-  try {
-    // Bezpečný přístup k env proměnným
-    const envPass = (import.meta as any).env?.VITE_ADMIN_PASSWORD;
-    if (envPass) return envPass;
-  } catch {
-    // Ignorujeme chybu přístupu k env
-  }
-  // Fallback pro vývoj/preview, pokud se nenačte .env
-  return 'menicka2026';
-};
-
-const ADMIN_PASSWORD = getAdminPassword();
+import { supabase } from '../utils/supabase/client';
 
 export function AdminPanel() {
-  const [isOpen, setIsOpen] = useState(false);
-  // Načteme stav přihlášení ihned při inicializaci (lazy initialization)
-  // Tím zabráníme probliknutí přihlašovací obrazovky
-  const [isAuthenticated, setIsAuthenticated] = useState(() => {
-    return localStorage.getItem('adminAuth') === 'true' || sessionStorage.getItem('adminAuth') === 'true';
-  });
-  const [password, setPassword] = useState('');
   const [activeTab, setActiveTab] = useState<'daily' | 'main' | 'reservations' | 'email'>('reservations');
-  const [rememberMe, setRememberMe] = useState(true);
 
   // Handle URL hash changes
   useEffect(() => {
@@ -39,110 +17,14 @@ export function AdminPanel() {
     }
   }, []);
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!ADMIN_PASSWORD) {
-      toast.error('Admin heslo není nastaveno v prostředí (VITE_ADMIN_PASSWORD)');
-      return;
-    }
-
-    if (password === ADMIN_PASSWORD) {
-      setIsAuthenticated(true);
-      
-      if (rememberMe) {
-        localStorage.setItem('adminAuth', 'true'); // Trvalé uložení (přežije zavření prohlížeče)
-      } else {
-        sessionStorage.setItem('adminAuth', 'true'); // Dočasné uložení (jen pro tuto relaci)
-      }
-      
-      toast.success('Přihlášení úspěšné!');
-      setPassword('');
-    } else {
-      toast.error('Nesprávné heslo!');
-    }
-  };
-
   const handleLogout = () => {
-    setIsAuthenticated(false);
-    localStorage.removeItem('adminAuth');
-    sessionStorage.removeItem('adminAuth');
-    setPassword('');
-    setIsOpen(false);
+    supabase.auth.signOut();
     toast.success('Odhlášení úspěšné');
   };
 
   const handleBackToWebsite = () => {
     window.location.href = '/';
   };
-
-  // Login screen
-  if (!isAuthenticated) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-6">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full"
-        >
-          <div className="text-center mb-8">
-            <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Lock className="w-8 h-8 text-primary" />
-            </div>
-            <h2 className="text-3xl font-bold mb-2" style={{ fontFamily: 'Cormorant Garamond' }}>
-              Admin
-            </h2>
-            <p className="text-gray-600">Přihlaste se pro správu restaurace</p>
-          </div>
-
-          <form onSubmit={handleLogin} className="space-y-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Heslo
-              </label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                placeholder="Zadejte heslo"
-                autoFocus
-              />
-            </div>
-
-            <div className="flex items-center">
-              <input
-                id="remember-me"
-                type="checkbox"
-                checked={rememberMe}
-                onChange={(e) => setRememberMe(e.target.checked)}
-                className="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded cursor-pointer"
-              />
-              <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700 cursor-pointer select-none">
-                Zůstat přihlášen na tomto zařízení
-              </label>
-            </div>
-
-            <button
-              type="submit"
-              className="w-full bg-primary hover:bg-primary/90 text-white py-3 rounded-lg font-medium transition-colors"
-            >
-              Přihlásit se
-            </button>
-
-            <button
-              type="button"
-              onClick={handleBackToWebsite}
-              className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 py-3 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
-            >
-              <Home className="w-4 h-4" />
-              Zpět na web
-            </button>
-          </form>
-        </motion.div>
-      </div>
-    );
-  }
 
   // Main admin panel
   return (

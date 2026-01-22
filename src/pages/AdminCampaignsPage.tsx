@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
-import { SUPABASE_URL, SUPABASE_ANON_KEY } from '../utils/supabase/env';
-import { Mail, Send, AlertTriangle, ShieldCheck, Users, Calendar, ArrowLeft, Home, ChevronRight } from 'lucide-react';
-import { navigate } from '../utils/router';
+import { apiJson } from '../utils/apiClient';
+import { Mail, Send, AlertTriangle, ShieldCheck, Users, ArrowLeft } from 'lucide-react';
 
 type CampaignType = 'SERVICE' | 'MARKETING';
 type ConsentStatus = 'TRANSACTIONAL_ONLY' | 'CONSENT_GRANTED' | 'SOFT_OPT_IN_ELIGIBLE' | 'NO_MARKETING' | 'UNSUBSCRIBED';
@@ -29,15 +28,7 @@ export function AdminCampaignsPage() {
   const loadCampaigns = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`${SUPABASE_URL}/functions/v1/make-server-d880a0b3/admin/campaigns`, {
-        headers: {
-          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-          'Content-Type': 'application/json'
-        }
-      });
-
-      if (!response.ok) throw new Error('Failed to load campaigns');
-      const data = await response.json();
+      const data = await apiJson<{ campaigns: Campaign[] }>('/admin/campaigns', {}, { authRequired: true });
       setCampaigns(data.campaigns || []);
     } catch (error) {
       console.error('Error loading campaigns:', error);
@@ -167,15 +158,11 @@ function CampaignWizard({ onClose, onComplete }: { onClose: () => void; onComple
 
   const loadRecipientCount = async () => {
     try {
-      const response = await fetch(
-        `https://${projectId}.supabase.co/functions/v1/make-server-d880a0b3/admin/contacts/count?status=${filterStatus}`,
-        {
-          headers: {
-            'Authorization': `Bearer ${publicAnonKey}`,
-          }
-        }
+      const data = await apiJson<{ count: number; eligible_count: number }>(
+        `/admin/contacts/count?status=${filterStatus}`,
+        {},
+        { authRequired: true }
       );
-      const data = await response.json();
       setRecipientCount(data.count || 0);
       setEligibleCount(data.eligible_count || 0);
     } catch (error) {
@@ -194,15 +181,11 @@ function CampaignWizard({ onClose, onComplete }: { onClose: () => void; onComple
 
     setLoading(true);
     try {
-      const response = await fetch(
-        `https://${projectId}.supabase.co/functions/v1/make-server-d880a0b3/admin/campaigns/send`,
+      await apiJson(
+        '/admin/campaigns/send',
         {
           method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${publicAnonKey}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
+          body: {
             name: campaignName,
             type: campaignType,
             filter_status: filterStatus,
@@ -210,15 +193,11 @@ function CampaignWizard({ onClose, onComplete }: { onClose: () => void; onComple
             html_content: htmlContent,
             from_name: fromName,
             from_email: fromEmail,
-            reply_to: replyTo
-          })
-        }
+            reply_to: replyTo,
+          },
+        },
+        { authRequired: true }
       );
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'Failed to send campaign');
-      }
 
       alert('✅ Campaign sent successfully!');
       onComplete();

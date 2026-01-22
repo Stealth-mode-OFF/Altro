@@ -69,7 +69,7 @@ export function Header() {
         <div className="flex justify-between items-center h-20 sm:h-24 transition-all duration-500 ease-out">
           {/* Logo - Premium sizing & interaction */}
           <button 
-            onClick={() => window.location.hash = 'admin'} 
+            onClick={() => navigateToSection('/')} 
             className="group flex items-center p-2 -ml-2 transition-transform duration-500 hover:scale-105 active:scale-95 touch-manipulation"
           >
             <img 

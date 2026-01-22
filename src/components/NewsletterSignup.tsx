@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Mail, Gift, Calendar, Sparkles, Check } from 'lucide-react';
 import { toast } from 'sonner@2.0.3';
 import { useLanguage } from '../contexts/LanguageContext';
-import { projectId, publicAnonKey } from '../utils/supabase/info';
+import { apiFetch } from '../utils/apiClient';
 import { motion } from 'motion/react';
 
 export function NewsletterSignup() {
@@ -22,16 +22,13 @@ export function NewsletterSignup() {
     setLoading(true);
 
     try {
-      const response = await fetch(
-        `https://${projectId}.supabase.co/functions/v1/make-server-d880a0b3/newsletter/subscribe`,
+      const response = await apiFetch(
+        '/newsletter/subscribe',
         {
           method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${publicAnonKey}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ email })
-        }
+          body: { email },
+        },
+        { authRequired: false }
       );
 
       if (!response.ok) {

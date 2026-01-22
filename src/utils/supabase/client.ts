@@ -1,11 +1,14 @@
-import { createClient, SupabaseClient } from '@jsr/supabase__supabase-js';
-import { SUPABASE_URL, SUPABASE_ANON_KEY } from './env';
+import { createClient } from '@supabase/supabase-js';
+import { SUPABASE_ANON_KEY, SUPABASE_URL } from './env';
 
-let client: SupabaseClient | null = null;
-
-export function getSupabaseClient() {
-  if (!client) {
-    client = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-  }
-  return client;
+if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+  // eslint-disable-next-line no-console
+  console.warn('[Supabase] Missing VITE_SUPABASE_URL or VITE_SUPABASE_ANON_KEY.');
 }
+
+export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+  auth: {
+    persistSession: true,
+    autoRefreshToken: true,
+  },
+});

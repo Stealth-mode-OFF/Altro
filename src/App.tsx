@@ -10,7 +10,7 @@ import { Footer } from './components/Footer';
 import { ScrollToTop } from './components/ScrollToTop';
 import { MobileNav } from './components/MobileNav';
 import { Router } from './utils/router';
-import { AuthGuard } from './auth/AuthGuard';
+import { AdminGate } from './components/AdminGate';
 
 // Lazy: admin interface and all route pages
 const AdminPanel = lazy(() => import('./components/AdminPanel').then(m => ({ default: m.AdminPanel })));
@@ -41,46 +41,18 @@ console.warn = (...args: any[]) => {
 
 export default function App() {
   const [showScrollTop, setShowScrollTop] = useState(false);
-  const [showAdmin, setShowAdmin] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
       setShowScrollTop(window.scrollY > 400);
     };
-    
-    const handleHashChange = () => {
-      if (window.location.hash.startsWith('#admin')) {
-        setShowAdmin(true);
-      }
-    };
-    
+
     window.addEventListener('scroll', handleScroll);
-    window.addEventListener('hashchange', handleHashChange);
-    
-    // Check if URL contains #admin on mount
-    if (window.location.hash.startsWith('#admin')) {
-      setShowAdmin(true);
-    }
-    
+
     return () => {
       window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('hashchange', handleHashChange);
     };
   }, []);
-
-  // If admin panel is active, show only admin panel
-  if (showAdmin) {
-    return (
-      <ErrorBoundary>
-        <LanguageProvider>
-          <Toaster position="top-center" richColors />
-          <Suspense fallback={<div className="p-6 text-center text-sm text-foreground/60">Načítání administrace…</div>}>
-            <AdminPanel />
-          </Suspense>
-        </LanguageProvider>
-      </ErrorBoundary>
-    );
-  }
 
   // SEO-optimized multi-page structure
   return (
@@ -108,10 +80,11 @@ export default function App() {
               { path: '/ochrana-udaju', component: <PrivacyPage /> },
               { path: '/privacy', component: <PrivacyPage /> },
               { path: '/cookies', component: <CookiesPage /> },
-              { path: '/admin', component: <AuthGuard><AdminPage /></AuthGuard> },
-              { path: '/admin/contacts', component: <AuthGuard><AdminContactsPage /></AuthGuard> },
-              { path: '/admin/campaigns', component: <AuthGuard><AdminCampaignsPage /></AuthGuard> },
-              { path: '/admin/suppression', component: <AuthGuard><AdminSuppressionPage /></AuthGuard> },
+              { path: '/admin', component: <AdminGate><AdminPage /></AdminGate> },
+              { path: '/admin/panel', component: <AdminGate><AdminPanel /></AdminGate> },
+              { path: '/admin/contacts', component: <AdminGate><AdminContactsPage /></AdminGate> },
+              { path: '/admin/campaigns', component: <AdminGate><AdminCampaignsPage /></AdminGate> },
+              { path: '/admin/suppression', component: <AdminGate><AdminSuppressionPage /></AdminGate> },
             ]} />
           </Suspense>
           
