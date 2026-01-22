@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { X, Plus, Trash2, Save, Edit2, Calendar, Lock, Unlock, UtensilsCrossed, Users, Book, Home, Shield } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { toast } from 'sonner';
+import { toast } from 'sonner@2.0.3';
 import { AdminDashboard } from './AdminDashboard';
 import { ReservationManager } from './ReservationManager';
 import { MainMenuAdmin } from './MainMenuAdmin';

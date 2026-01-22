@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { Calendar, Clock, Users, Mail, Phone, User, CheckCircle, X, Trash2, RefreshCw, GlassWater, Ticket, Send, AlertCircle } from 'lucide-react';
-import { toast } from 'sonner';
+import { toast } from 'sonner@2.0.3';
 import { getReservations, deleteReservation as apiDeleteReservation, updateReservationStatus, getContacts } from '../hooks/useApi';
 import { projectId, publicAnonKey } from '../utils/supabase/info';
 

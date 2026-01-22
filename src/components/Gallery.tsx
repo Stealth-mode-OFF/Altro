@@ -1,7 +1,7 @@
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { motion } from 'motion/react';
 import { useLanguage } from '../contexts/LanguageContext';
-import galleryImage2 from '../assets/2678cc9f1180293e020e020c24637564c46ba85c.png';
+import galleryImage2 from 'figma:asset/2678cc9f1180293e020e020c24637564c46ba85c.png';
 
 export function Gallery() {
   const { t } = useLanguage();
