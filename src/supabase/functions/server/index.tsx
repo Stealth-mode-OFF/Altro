@@ -1,6 +1,7 @@
 import { Hono } from "npm:hono";
 import { cors } from "npm:hono/cors";
 import { logger } from "npm:hono/logger";
+import { createClient } from "jsr:@supabase/supabase-js@2.49.8";
 import * as kv from "./kv_store.tsx";
 import * as emailService from "./email-service.tsx";
 import { STATIC_WEEKLY_MENU } from "./static-menu.ts";
@@ -12,21 +13,123 @@ const app = new Hono();
 console.log("Server starting/restarting... Loading configuration.");
 console.log(`RESEND_API_KEY present: ${!!Deno.env.get('RESEND_API_KEY')}`);
 
+const SUPABASE_URL = Deno.env.get("SUPABASE_URL") || "";
+const SUPABASE_ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY") || "";
+const ADMIN_EMAILS = (Deno.env.get("ADMIN_EMAILS") || "")
+  .split(",")
+  .map((email) => email.trim().toLowerCase())
+  .filter(Boolean);
+
+const ALLOWED_ORIGINS = (Deno.env.get("ALLOWED_ORIGINS") || "")
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
+const isAllowedOrigin = (origin?: string | null) => {
+  if (!origin) return true;
+  if (ALLOWED_ORIGINS.length === 0) return true;
+  return ALLOWED_ORIGINS.includes(origin);
+};
+
+const authClient = () => createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+const getBearerToken = (authHeader?: string | null) => {
+  if (!authHeader) return null;
+  const [scheme, token] = authHeader.split(" ");
+  if (!scheme || scheme.toLowerCase() !== "bearer" || !token) return null;
+  return token;
+};
+
+const requireAdmin = async (c: any) => {
+  if (c.req.method === "OPTIONS") return null;
+
+  if (!SUPABASE_URL || !SUPABASE_ANON_KEY || ADMIN_EMAILS.length === 0) {
+    return c.json({ error: "Admin access not configured" }, 403);
+  }
+
+  const token = getBearerToken(c.req.header("authorization"));
+  if (!token) {
+    return c.json({ error: "Unauthorized" }, 401);
+  }
+
+  const supabase = authClient();
+  const { data, error } = await supabase.auth.getUser(token);
+  if (error || !data?.user) {
+    return c.json({ error: "Unauthorized" }, 401);
+  }
+
+  const email = data.user.email?.toLowerCase();
+  if (!email || !ADMIN_EMAILS.includes(email)) {
+    return c.json({ error: "Forbidden" }, 403);
+  }
+
+  c.set("adminEmail", email);
+  return null;
+};
+
+const getClientIp = (c: any) => {
+  const forwarded = c.req.header("x-forwarded-for");
+  if (forwarded) return forwarded.split(",")[0]?.trim() || "unknown";
+  return c.req.header("cf-connecting-ip") || "unknown";
+};
+
+const rateLimit = async (
+  c: any,
+  {
+    key,
+    limit,
+    windowMs,
+  }: { key: string; limit: number; windowMs: number },
+) => {
+  const ip = getClientIp(c);
+  const bucketKey = `ratelimit:${key}:${ip}`;
+  const now = Date.now();
+  const existing = await kv.get(bucketKey);
+
+  if (!existing || typeof existing.resetAt !== "number" || now > existing.resetAt) {
+    await kv.set(bucketKey, { count: 1, resetAt: now + windowMs });
+    return null;
+  }
+
+  if (existing.count >= limit) {
+    return c.json({ error: "Too many requests. Please try again later." }, 429);
+  }
+
+  await kv.set(bucketKey, { count: existing.count + 1, resetAt: existing.resetAt });
+  return null;
+};
+
 // Enable logger
 app.use('*', logger(console.log));
+
+// Origin allowlist check (pre-cors)
+app.use('*', async (c, next) => {
+  const origin = c.req.header('origin');
+  if (!isAllowedOrigin(origin)) {
+    return c.json({ error: 'Origin not allowed' }, 403);
+  }
+  await next();
+});
 
 // Enable CORS for all routes and methods
 app.use(
   "/*",
   cors({
-    origin: "*",
+    origin: ALLOWED_ORIGINS.length > 0 ? ALLOWED_ORIGINS : "*",
     allowHeaders: ["Content-Type", "Authorization"],
     allowMethods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     exposeHeaders: ["Content-Length"],
     maxAge: 600,
-    credentials: true,
+    credentials: false,
   }),
 );
+
+// Protect all admin endpoints
+app.use("/make-server-d880a0b3/admin/*", async (c, next) => {
+  const guard = await requireAdmin(c);
+  if (guard) return guard;
+  await next();
+});
 
 // Health check endpoint
 app.get("/make-server-d880a0b3/health", (c) => {
@@ -54,6 +157,13 @@ app.get("/make-server-d880a0b3/health", (c) => {
 // Create a new reservation
 app.post("/make-server-d880a0b3/reservations", async (c) => {
   try {
+    const limitResponse = await rateLimit(c, {
+      key: "reservations",
+      limit: 5,
+      windowMs: 10 * 60 * 1000,
+    });
+    if (limitResponse) return limitResponse;
+
     const body = await c.req.json();
     const { date, time, name, email, phone, message, guests, occasion, marketingConsent } = body;
 
@@ -163,6 +273,9 @@ app.post("/make-server-d880a0b3/reservations", async (c) => {
 
 app.get("/make-server-d880a0b3/reservations", async (c) => {
   try {
+    const guard = await requireAdmin(c);
+    if (guard) return guard;
+
     const reservations = await kv.getByPrefix("reservation:");
     
     // Sort by timestamp descending (newest first)
@@ -180,6 +293,9 @@ app.get("/make-server-d880a0b3/reservations", async (c) => {
 // Delete a reservation
 app.delete("/make-server-d880a0b3/reservations/:id", async (c) => {
   try {
+    const guard = await requireAdmin(c);
+    if (guard) return guard;
+
     const id = c.req.param("id");
     await kv.del(`reservation:${id}`);
     
@@ -194,6 +310,9 @@ app.delete("/make-server-d880a0b3/reservations/:id", async (c) => {
 // Update reservation status
 app.patch("/make-server-d880a0b3/reservations/:id", async (c) => {
   try {
+    const guard = await requireAdmin(c);
+    if (guard) return guard;
+
     const id = c.req.param("id");
     const body = await c.req.json();
     const { status } = body;
@@ -404,6 +523,9 @@ app.get("/make-server-d880a0b3/weekly-menu/:weekStart", async (c) => {
 // Save weekly menu
 app.post("/make-server-d880a0b3/weekly-menu", async (c) => {
   try {
+    const guard = await requireAdmin(c);
+    if (guard) return guard;
+
     const body = await c.req.json();
     const { weekStart, items } = body;
 
@@ -1169,6 +1291,9 @@ app.get("/make-server-d880a0b3/main-menu", async (c) => {
 // Save main menu
 app.post("/make-server-d880a0b3/main-menu", async (c) => {
   try {
+    const guard = await requireAdmin(c);
+    if (guard) return guard;
+
     const body = await c.req.json();
     const { items } = body;
 
@@ -1215,6 +1340,9 @@ app.post("/make-server-d880a0b3/main-menu", async (c) => {
 // Seed main menu with complete data (including drinks)
 app.post("/make-server-d880a0b3/menu/seed", async (c) => {
   try {
+    const guard = await requireAdmin(c);
+    if (guard) return guard;
+
     const body = await c.req.json();
     const { menuItems } = body;
 
@@ -1235,6 +1363,9 @@ app.post("/make-server-d880a0b3/menu/seed", async (c) => {
 // Delete main menu (force reinit)
 app.delete("/make-server-d880a0b3/main-menu", async (c) => {
   try {
+    const guard = await requireAdmin(c);
+    if (guard) return guard;
+
     await kv.del("main-menu");
     console.log("Main menu deleted - will reinitialize on next GET");
     return c.json({ success: true, message: "Menu deleted" });
@@ -1249,6 +1380,13 @@ app.delete("/make-server-d880a0b3/main-menu", async (c) => {
 // Newsletter subscription (public endpoint)
 app.post("/make-server-d880a0b3/newsletter/subscribe", async (c) => {
   try {
+    const limitResponse = await rateLimit(c, {
+      key: "newsletter",
+      limit: 5,
+      windowMs: 10 * 60 * 1000,
+    });
+    if (limitResponse) return limitResponse;
+
     const body = await c.req.json();
     const { email } = body;
 

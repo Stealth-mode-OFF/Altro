@@ -9,6 +9,13 @@ export function AdminPage() {
 
   const adminSections = [
     {
+      title: 'Restaurant Operations',
+      description: 'Reservations, weekly menu and main menu management',
+      icon: BarChart3,
+      path: '/admin/panel',
+      color: 'green'
+    },
+    {
       title: 'Contact Management',
       description: 'View, filter, and export contacts with GDPR consent tracking',
       icon: Users,

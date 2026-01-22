@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
-import { useLanguage } from '../contexts/LanguageContext';
-import { SUPABASE_URL, SUPABASE_ANON_KEY } from '../utils/supabase/env';
-import { Mail, Download, Tag, UserX, Search, Filter, AlertCircle, ShieldCheck, Calendar, Home, ChevronRight } from 'lucide-react';
+import { apiFetch, apiJson } from '../utils/apiClient';
+import { Mail, Download, Tag, UserX, Search, Filter, ShieldCheck, Home, ChevronRight } from 'lucide-react';
 import { navigate } from '../utils/router';
 
 type ConsentStatus = 'TRANSACTIONAL_ONLY' | 'CONSENT_GRANTED' | 'SOFT_OPT_IN_ELIGIBLE' | 'NO_MARKETING' | 'UNSUBSCRIBED';
@@ -59,7 +58,6 @@ const SOURCE_LABELS = {
 };
 
 export function AdminContactsPage() {
-  const { language } = useLanguage();
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
@@ -76,15 +74,7 @@ export function AdminContactsPage() {
   const loadContacts = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`${SUPABASE_URL}/functions/v1/make-server-d880a0b3/admin/contacts`, {
-        headers: {
-          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-          'Content-Type': 'application/json'
-        }
-      });
-
-      if (!response.ok) throw new Error('Failed to load contacts');
-      const data = await response.json();
+      const data = await apiJson<{ contacts: Contact[] }>('/admin/contacts', {}, { authRequired: true });
       setContacts(data.contacts || []);
     } catch (error) {
       console.error('Error loading contacts:', error);
@@ -132,18 +122,13 @@ export function AdminContactsPage() {
     }
 
     try {
-      const response = await fetch(
-        `https://${projectId}.supabase.co/functions/v1/make-server-d880a0b3/admin/contacts/export`,
+      const response = await apiFetch(
+        '/admin/contacts/export',
         {
           method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${publicAnonKey}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            emails: contactsToExport.map(c => c.email)
-          })
-        }
+          body: { emails: contactsToExport.map(c => c.email) },
+        },
+        { authRequired: true }
       );
 
       if (!response.ok) throw new Error('Export failed');
@@ -177,21 +162,14 @@ export function AdminContactsPage() {
     }
 
     try {
-      const response = await fetch(
-        `https://${projectId}.supabase.co/functions/v1/make-server-d880a0b3/admin/contacts/mark-no-marketing`,
+      await apiJson(
+        '/admin/contacts/mark-no-marketing',
         {
           method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${publicAnonKey}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            emails: Array.from(selectedContacts)
-          })
-        }
+          body: { emails: Array.from(selectedContacts) },
+        },
+        { authRequired: true }
       );
-
-      if (!response.ok) throw new Error('Failed to update');
       
       await logAudit('mark_no_marketing', `Marked ${selectedContacts.size} contacts as NO_MARKETING`);
       setSelectedContacts(new Set());
@@ -204,21 +182,18 @@ export function AdminContactsPage() {
 
   const logAudit = async (action: string, details: string) => {
     try {
-      await fetch(
-        `https://${projectId}.supabase.co/functions/v1/make-server-d880a0b3/admin/audit-log`,
+      await apiJson(
+        '/admin/audit-log',
         {
           method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${publicAnonKey}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
+          body: {
             actor: 'admin',
             action,
             details,
-            timestamp: new Date().toISOString()
-          })
-        }
+            timestamp: new Date().toISOString(),
+          },
+        },
+        { authRequired: true }
       );
     } catch (error) {
       console.error('Audit log error:', error);

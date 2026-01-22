@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Check, AlertTriangle, XCircle, RefreshCw, Send, Shield, Info, Server, Search, ExternalLink } from 'lucide-react';
 import { toast } from 'sonner@2.0.3';
-import { projectId, publicAnonKey } from '../utils/supabase/info';
+import { apiJson } from '../utils/apiClient';
 
 interface EmailStatus {
   configured: boolean;
@@ -30,25 +30,7 @@ export function EmailDeliverability() {
   const fetchHealth = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`https://${projectId}.supabase.co/functions/v1/make-server-d880a0b3/health`, {
-        headers: {
-          'Authorization': `Bearer ${publicAnonKey}`
-        }
-      });
-      
-      let data;
-      const text = await response.text();
-      try {
-        data = JSON.parse(text);
-      } catch (e) {
-        console.error('Non-JSON response:', text);
-        throw new Error(`Server returned non-JSON: ${response.status} ${response.statusText}`);
-      }
-
-      if (!response.ok) {
-        console.error('Health check error details:', data);
-        throw new Error(data.error || data.message || `HTTP ${response.status}: ${JSON.stringify(data)}`);
-      }
+      const data = await apiJson<HealthData>('/health');
       setHealthData(data);
     } catch (error) {
       console.error('Failed to fetch health:', error);
@@ -69,15 +51,11 @@ export function EmailDeliverability() {
     setSendingTest(true);
     setLastTestResult(null);
     try {
-      const response = await fetch(`https://${projectId}.supabase.co/functions/v1/make-server-d880a0b3/admin/test-email`, {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${publicAnonKey}`
-        },
-        body: JSON.stringify({ email: testEmail })
-      });
-      const data = await response.json();
+      const data = await apiJson<any>(
+        '/admin/test-email',
+        { method: 'POST', body: { email: testEmail } },
+        { authRequired: true }
+      );
       setLastTestResult(data);
       
       if (data.success) {
@@ -96,12 +74,11 @@ export function EmailDeliverability() {
     setCheckingDns(true);
     setDnsData(null);
     try {
-      const response = await fetch(`https://${projectId}.supabase.co/functions/v1/make-server-d880a0b3/admin/dns-check?domain=altrodatony.com`, {
-        headers: {
-          'Authorization': `Bearer ${publicAnonKey}`
-        }
-      });
-      const data = await response.json();
+      const data = await apiJson<any>(
+        '/admin/dns-check?domain=altrodatony.com',
+        {},
+        { authRequired: true }
+      );
       setDnsData(data);
       toast.success('DNS diagnostika dokončena');
     } catch (error) {

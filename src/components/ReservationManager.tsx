@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
-import { Calendar, Clock, Users, Mail, Phone, User, CheckCircle, X, Trash2, RefreshCw, GlassWater, Ticket, Send, AlertCircle } from 'lucide-react';
+import { Calendar, Clock, Users, Mail, Phone, User, CheckCircle, X, Trash2, RefreshCw, Ticket, Send, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner@2.0.3';
 import { getReservations, deleteReservation as apiDeleteReservation, updateReservationStatus, getContacts } from '../hooks/useApi';
-import { projectId, publicAnonKey } from '../utils/supabase/info';
+import { apiJson } from '../utils/apiClient';
 
 interface Reservation {
   id: string;
@@ -61,10 +61,7 @@ export function ReservationManager() {
 
   const checkEmailHealth = async () => {
     try {
-      const response = await fetch(`https://${projectId}.supabase.co/functions/v1/make-server-d880a0b3/health`, {
-        headers: { 'Authorization': `Bearer ${publicAnonKey}` }
-      });
-      const data = await response.json();
+      const data = await apiJson<any>('/health');
       setEmailHealth(data.email);
       
       // If not configured, automatically show DNS info
@@ -153,13 +150,11 @@ export function ReservationManager() {
     setRetryingEmail(`${reservation.id}-${type}`);
     
     try {
-      const response = await fetch(`https://${projectId}.supabase.co/functions/v1/make-server-d880a0b3/admin/retry-email`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ reservationId: reservation.id, type })
-      });
-      
-      const result = await response.json();
+      const result = await apiJson<any>(
+        '/admin/retry-email',
+        { method: 'POST', body: { reservationId: reservation.id, type } },
+        { authRequired: true }
+      );
       
       if (result.success) {
         toast.success('Email úspěšně odeslán');
@@ -181,13 +176,11 @@ export function ReservationManager() {
 
     setIsTestingEmail(true);
     try {
-      const response = await fetch(`https://${projectId}.supabase.co/functions/v1/make-server-d880a0b3/admin/test-email`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email })
-      });
-      
-      const result = await response.json();
+      const result = await apiJson<any>(
+        '/admin/test-email',
+        { method: 'POST', body: { email } },
+        { authRequired: true }
+      );
       
       if (result.success) {
         toast.success(`Testovací e-mail odeslán na ${email}. Zkontrolujte schránku (i spam).`);

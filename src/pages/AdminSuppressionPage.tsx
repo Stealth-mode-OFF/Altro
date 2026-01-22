@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { SUPABASE_URL, SUPABASE_ANON_KEY } from '../utils/supabase/env';
-import { UserX, Upload, AlertCircle, ShieldAlert, Home, ChevronRight } from 'lucide-react';
+import { apiJson } from '../utils/apiClient';
+import { UserX, Upload, ShieldAlert } from 'lucide-react';
 import { navigate } from '../utils/router';
 
 interface SuppressedContact {
@@ -24,14 +24,7 @@ export function AdminSuppressionPage() {
   const loadSuppressed = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`${SUPABASE_URL}/functions/v1/make-server-d880a0b3/admin/suppression`, {
-        headers: {
-          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-        }
-      });
-
-      if (!response.ok) throw new Error('Failed to load suppression list');
-      const data = await response.json();
+      const data = await apiJson<{ suppressed: SuppressedContact[] }>('/admin/suppression', {}, { authRequired: true });
       setSuppressedContacts(data.suppressed || []);
     } catch (error) {
       console.error('Error loading suppression list:', error);
@@ -61,16 +54,14 @@ export function AdminSuppressionPage() {
     }
 
     try {
-      const response = await fetch(`${SUPABASE_URL}/functions/v1/make-server-d880a0b3/admin/suppression/import`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-          'Content-Type': 'application/json'
+      await apiJson(
+        '/admin/suppression/import',
+        {
+          method: 'POST',
+          body: { emails },
         },
-        body: JSON.stringify({ emails })
-      });
-
-      if (!response.ok) throw new Error('Import failed');
+        { authRequired: true }
+      );
 
       alert(`✅ Successfully imported ${emails.length} email(s)`);
       setImportText('');
