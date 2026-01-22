@@ -2,7 +2,7 @@ import { ImageWithFallback } from './figma/ImageWithFallback';
 import { motion } from 'motion/react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { Award, Heart } from 'lucide-react';
-import chefImage from "../assets/8051cfda16de3d7aa19331d176f0be2dc150bed1.png";
+import chefImage from "figma:asset/8051cfda16de3d7aa19331d176f0be2dc150bed1.png";
 
 export function ChefStory() {
   const { t } = useLanguage();

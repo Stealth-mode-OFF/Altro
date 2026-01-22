@@ -1,7 +1,7 @@
 import { motion } from 'motion/react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { ImageWithFallback } from './figma/ImageWithFallback';
-import introImage from '../assets/6bc4f18e3e30fa0644c76f7df4899136a7bdab79.png';
+import introImage from 'figma:asset/6bc4f18e3e30fa0644c76f7df4899136a7bdab79.png';
 
 export function Intro() {
   const { t } = useLanguage();

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Toaster } from 'sonner';
+import { Toaster } from 'sonner@2.0.3';
 import { LanguageProvider } from './contexts/LanguageContext';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { PerformanceMonitor } from './components/PerformanceMonitor';

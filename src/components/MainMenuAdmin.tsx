@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Plus, Trash2, Save, Edit2, X, Eye, EyeOff, Globe, RefreshCw } from 'lucide-react';
-import { toast } from 'sonner';
+import { toast } from 'sonner@2.0.3';
 import { getMainMenu, saveMainMenu, deleteMainMenu } from '../hooks/useApi';
 import { getDefaultMenuItems, MenuItem, LocalizedString } from '../data/defaultMenu';
 import { useLanguage } from '../contexts/LanguageContext';

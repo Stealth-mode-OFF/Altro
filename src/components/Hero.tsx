@@ -2,7 +2,7 @@ import { ImageWithFallback } from './figma/ImageWithFallback';
 import { Calendar, ArrowRight } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useLanguage } from '../contexts/LanguageContext';
-import heroBackground from "../assets/imgi_7_header.jpg";
+import heroBackground from "figma:asset/25aa2f7917174e5633532ace212d5bcf77b22ebd.png";
 
 export function Hero() {
   const { t } = useLanguage();
