@@ -1,6 +1,7 @@
 import { Star, ExternalLink, Quote } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useLanguage } from '../contexts/LanguageContext';
+import { GOOGLE_MAPS_SHORT_URL, GOOGLE_REVIEWS } from '../constants/maps';
 
 const reviews = [
   {
@@ -43,8 +44,7 @@ const reviews = [
 
 export function Reviews() {
   const { t } = useLanguage();
-  const averageRating = 4.9;
-  const totalReviews = 73;
+  const { averageRating, totalReviews } = GOOGLE_REVIEWS;
 
   return (
     <section className="section-padding bg-white">
@@ -60,7 +60,7 @@ export function Reviews() {
           <h2 className="text-4xl md:text-7xl lg:text-8xl mb-8 sm:mb-12 font-serif">{t('reviews.title')}</h2>
           
           <a
-            href="https://maps.app.goo.gl/2HSXVSZx1cJtphZGA?g_st=ipc"
+            href={GOOGLE_MAPS_SHORT_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-block bg-gradient-to-br from-amber-50 to-orange-50 rounded-3xl p-6 sm:p-14 shadow-xl max-w-full hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 cursor-pointer group"
