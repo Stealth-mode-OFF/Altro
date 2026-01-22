@@ -1,7 +1,7 @@
 import { Instagram, Facebook, MapPin, Phone, Mail, Clock, ArrowUpRight, Lock } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { navigate } from '../utils/router';
-import logoImage from "figma:asset/8e479ee20a3f29f31855e79e992e8c5be3d12322.png";
+import logoImage from '../assets/altro-logo.avif';
 
 export function Footer() {
   const { t, language } = useLanguage();
