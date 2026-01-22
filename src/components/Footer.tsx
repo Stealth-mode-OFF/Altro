@@ -45,33 +45,30 @@ export function Footer() {
       <div className="container-custom relative z-10 pt-20 pb-8">
         
         {/* Top Section: Main Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-8 mb-20">
-          
-          {/* Column 1: Brand (4 cols) */}
-          <div className="lg:col-span-4 flex flex-col items-center lg:items-start text-center lg:text-left space-y-8">
-            <div 
-              onClick={() => navigateToSection('/')}
-              className="cursor-pointer transition-transform hover:scale-105 inline-block bg-white p-4 rounded-xl shadow-lg shadow-white/5"
-            >
-              <img 
-                src={logoImage} 
-                alt="Altro Da Tony" 
-                className="h-16 w-auto"
-              />
-            </div>
-            
-            <p className="text-stone-500 max-w-sm font-light leading-relaxed text-sm">
-              {t('footer.about')}
-            </p>
 
-            <div className="flex gap-4">
-              <SocialButton href="https://www.instagram.com/altro.da.tony" icon={<Instagram className="w-5 h-5" />} label="Instagram" />
-              <SocialButton href="https://www.facebook.com/p/Altro-da-Tony-61567773236741/" icon={<Facebook className="w-5 h-5" />} label="Facebook" />
-            </div>
+        <div className="flex flex-col items-center justify-center mb-20 space-y-8">
+          {/* Brand/Logo */}
+          <div 
+            onClick={() => navigateToSection('/')}
+            className="cursor-pointer transition-transform hover:scale-105 inline-block bg-white p-4 rounded-xl shadow-lg shadow-white/5"
+          >
+            <img 
+              src={logoImage} 
+              alt="Altro Da Tony" 
+              className="h-16 w-auto"
+            />
           </div>
-
-          {/* Column 2: Navigation (2 cols) */}
-          <div className="lg:col-span-2 flex flex-col items-center lg:items-start text-center lg:text-left">
+          {/* About */}
+          <p className="text-stone-500 max-w-sm font-light leading-relaxed text-sm text-center">
+            {t('footer.about')}
+          </p>
+          {/* Social Icons */}
+          <div className="flex gap-4 justify-center">
+            <SocialButton href="https://www.instagram.com/altro.da.tony" icon={<Instagram className="w-5 h-5" />} label="Instagram" />
+            <SocialButton href="https://www.facebook.com/p/Altro-da-Tony-61567773236741/" icon={<Facebook className="w-5 h-5" />} label="Facebook" />
+          </div>
+          {/* Menu Navigation */}
+          <div className="flex flex-col items-center text-center">
             <h4 className="font-serif text-white text-lg mb-8">{t('nav.menu')}</h4>
             <ul className="space-y-4 font-medium text-sm">
               <FooterLink onClick={() => navigateToSection('/')}>{t('nav.home')}</FooterLink>
@@ -81,6 +78,7 @@ export function Footer() {
               <FooterLink onClick={() => navigateToSection('/vinohrady-korunni')}>{language === 'cs' ? 'Vinohrady' : language === 'en' ? 'Location' : 'Posizione'}</FooterLink>
             </ul>
           </div>
+        </div>
 
           {/* Column 3: Contact Info (3 cols) */}
           <div className="lg:col-span-3 flex flex-col items-center lg:items-start text-center lg:text-left">
