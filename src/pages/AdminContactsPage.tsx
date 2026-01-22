@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
-import { projectId, publicAnonKey } from '../utils/supabase/info';
+import { SUPABASE_URL, SUPABASE_ANON_KEY } from '../utils/supabase/env';
 import { Mail, Download, Tag, UserX, Search, Filter, AlertCircle, ShieldCheck, Calendar, Home, ChevronRight } from 'lucide-react';
 import { navigate } from '../utils/router';
 
@@ -76,15 +76,12 @@ export function AdminContactsPage() {
   const loadContacts = async () => {
     try {
       setLoading(true);
-      const response = await fetch(
-        `https://${projectId}.supabase.co/functions/v1/make-server-d880a0b3/admin/contacts`,
-        {
-          headers: {
-            'Authorization': `Bearer ${publicAnonKey}`,
-            'Content-Type': 'application/json'
-          }
+      const response = await fetch(`${SUPABASE_URL}/functions/v1/make-server-d880a0b3/admin/contacts`, {
+        headers: {
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+          'Content-Type': 'application/json'
         }
-      );
+      });
 
       if (!response.ok) throw new Error('Failed to load contacts');
       const data = await response.json();

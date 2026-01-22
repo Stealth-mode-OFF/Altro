@@ -82,14 +82,18 @@ export function Header() {
           {/* Desktop Navigation - Minimalist Luxury */}
           <nav className="hidden md:flex items-center gap-10 lg:gap-14">
             {menuItems.map((item) => (
-              <button
+              <a
                 key={item.path + (item.sectionId || '')}
-                onClick={() => navigateToSection(item.path, item.sectionId)}
+                href={item.path + (item.sectionId ? `#${item.sectionId}` : '')}
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigateToSection(item.path, item.sectionId);
+                }}
                 className="relative text-foreground/60 hover:text-foreground transition-all duration-500 text-xs lg:text-sm font-medium tracking-[0.2em] uppercase py-2 group"
               >
                 {t(item.labelKey)}
                 <span className="absolute -bottom-2 left-1/2 w-1 h-1 bg-primary rounded-full opacity-0 -translate-x-1/2 translate-y-2 transition-all duration-500 group-hover:opacity-100 group-hover:translate-y-0" />
-              </button>
+              </a>
             ))}
             
             <div className="flex items-center gap-6 pl-2">
