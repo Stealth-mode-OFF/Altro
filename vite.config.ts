@@ -62,6 +62,21 @@
     build: {
       target: 'esnext',
       outDir: 'build',
+      chunkSizeWarningLimit: 1200,
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            if (id.includes('node_modules')) {
+              if (id.includes('react')) return 'react-vendor';
+              if (id.includes('motion')) return 'motion-vendor';
+              if (id.includes('lucide-react')) return 'icons-vendor';
+              if (id.includes('radix-ui')) return 'radix-vendor';
+              if (id.includes('recharts')) return 'charts-vendor';
+              return 'vendor';
+            }
+          },
+        },
+      },
     },
     server: {
       port: 3000,
