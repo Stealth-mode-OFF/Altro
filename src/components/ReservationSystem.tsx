@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Calendar, Clock, User, Mail, Phone, Users, MessageSquare, ArrowLeft, ArrowRight, Check, X } from 'lucide-react';
-import { toast } from 'sonner';
+import { toast } from 'sonner@2.0.3';
 import { useLanguage } from '../contexts/LanguageContext';
 import { createReservation } from '../hooks/useApi';
 

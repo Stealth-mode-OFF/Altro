@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { Plus, Trash2, Edit2, X } from 'lucide-react';
-import { toast } from 'sonner';
+import { toast } from 'sonner@2.0.3';
 import { getWeeklyMenu, saveWeeklyMenu } from '../hooks/useApi';
 import { weeklyMenuData } from '../data/weeklyMenu';
 

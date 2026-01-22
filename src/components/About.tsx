@@ -2,8 +2,8 @@ import { ImageWithFallback } from './figma/ImageWithFallback';
 import { motion } from 'motion/react';
 import { Award, Heart, Users } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
-import chefImage from "../assets/72c7ddfeeafb6871bbe3a7be0139e4ff974e0c84.png";
-import balsamicoImage from "../assets/d2f44ae16e31926bf96aef3c5f4e4a3d03368e0a.png";
+import chefImage from "figma:asset/72c7ddfeeafb6871bbe3a7be0139e4ff974e0c84.png";
+import balsamicoImage from "figma:asset/d2f44ae16e31926bf96aef3c5f4e4a3d03368e0a.png";
 
 export function About() {
   const { t } = useLanguage();

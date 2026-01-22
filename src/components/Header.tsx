@@ -3,7 +3,7 @@ import { Menu as MenuIcon, X } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { navigate } from '../utils/router';
-import logoImage from "../assets/altro.png";
+import logoImage from "figma:asset/8e479ee20a3f29f31855e79e992e8c5be3d12322.png";
 
 export function Header() {
   const { t } = useLanguage();
