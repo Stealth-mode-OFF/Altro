@@ -4,6 +4,18 @@ import { navigate } from '../utils/router';
 import { AnimatePresence, motion } from 'motion/react';
 
 export const CONSENT_KEY = 'altro_da_tony_consent_v2'; // New key version
+const CONSENT_IP_KEY = 'altro_da_tony_consent_ip';
+// Helper to get public IP address
+async function fetchPublicIP(): Promise<string | null> {
+  try {
+    const res = await fetch('https://api.ipify.org?format=json');
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data.ip || null;
+  } catch {
+    return null;
+  }
+}
 const EXPIRATION_DAYS = 365;
 
 // --- Helper Functions ---
@@ -30,13 +42,14 @@ export function getCookie(name: string) {
 }
 
 // Hybrid storage system (Cookie + LocalStorage backup)
-export function saveConsent(value: string) {
-  // 1. Try to save to Cookies
+export function saveConsent(value: string, ip?: string) {
   setCookie(CONSENT_KEY, value, EXPIRATION_DAYS);
-  
-  // 2. Try to save to LocalStorage (backup)
   try {
     localStorage.setItem(CONSENT_KEY, value);
+    if (ip) {
+      localStorage.setItem(CONSENT_IP_KEY, ip);
+      setCookie(CONSENT_IP_KEY, ip, EXPIRATION_DAYS);
+    }
   } catch (e) {
     console.warn('LocalStorage access denied', e);
   }
@@ -46,7 +59,6 @@ export function checkConsent(): string | null {
   // 1. Check Cookies first
   const cookieVal = getCookie(CONSENT_KEY);
   if (cookieVal) return cookieVal;
-  
   // 2. Check LocalStorage fallback
   try {
     return localStorage.getItem(CONSENT_KEY);
@@ -55,30 +67,54 @@ export function checkConsent(): string | null {
   }
 }
 
+export function getStoredConsentIP(): string | null {
+  // 1. Check Cookies first
+  const cookieVal = getCookie(CONSENT_IP_KEY);
+  if (cookieVal) return cookieVal;
+  // 2. Check LocalStorage fallback
+  try {
+    return localStorage.getItem(CONSENT_IP_KEY);
+  } catch (e) {
+    return null;
+  }
+}
+
 export function CookieConsent() {
   const { t, language } = useLanguage();
   const [isVisible, setIsVisible] = useState(false);
+  const [ip, setIp] = useState<string | null>(null);
 
   useEffect(() => {
-    // Check if user has already consented
-    const storedConsent = checkConsent();
-    
-    if (!storedConsent) {
-      // Small delay to make animation smoother
-      const timer = setTimeout(() => {
-        setIsVisible(true);
-      }, 1000);
-      return () => clearTimeout(timer);
-    }
+    let cancelled = false;
+    // Fetch IP and check consent
+    fetchPublicIP().then(userIp => {
+      if (cancelled) return;
+      setIp(userIp);
+      const storedConsent = checkConsent();
+      const storedIp = getStoredConsentIP();
+      // If consent exists and IP matches, do not show banner
+      if (storedConsent && storedIp && userIp && storedIp === userIp) {
+        setIsVisible(false);
+        return;
+      }
+      // If no consent or IP does not match, show banner
+      if (!storedConsent || !storedIp || storedIp !== userIp) {
+        const timer = setTimeout(() => {
+          setIsVisible(true);
+        }, 1000);
+        return () => clearTimeout(timer);
+      }
+    });
+    return () => { cancelled = true; };
   }, []);
 
   const handleAccept = () => {
-    saveConsent('accepted');
+    saveConsent('accepted', ip || undefined);
     setIsVisible(false);
   };
 
   const handleDecline = () => {
-    saveConsent('declined'); 
+    saveConsent('declined', ip || undefined);
     setIsVisible(false);
   };
 

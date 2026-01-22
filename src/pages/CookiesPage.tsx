@@ -1,33 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
-import { checkConsent, getCookie, CONSENT_KEY } from '../components/CookieConsent';
 
 export function CookiesPage() {
   const { language } = useLanguage();
-  const [status, setStatus] = useState<{
-    consent: string | null;
-    cookie: string | null;
-    local: string | null;
-  }>({ consent: null, cookie: null, local: null });
-
   useEffect(() => {
     window.scrollTo(0, 0);
     document.title = language === 'cs' ? 'Cookies | Altro Da Tony' 
       : language === 'en' ? 'Cookies | Altro Da Tony'
       : 'Cookies | Altro Da Tony';
-
-    // Check status
-    const updateStatus = () => {
-      setStatus({
-        consent: checkConsent(),
-        cookie: getCookie(CONSENT_KEY),
-        local: localStorage.getItem(CONSENT_KEY)
-      });
-    };
-    
-    updateStatus();
-    const interval = setInterval(updateStatus, 1000);
-    return () => clearInterval(interval);
   }, [language]);
 
   return (
@@ -67,9 +47,20 @@ export function CookiesPage() {
               </li>
               <li>
                 <strong>{language === 'cs' ? 'Analytické cookies' : language === 'en' ? 'Analytical cookies' : 'Cookie analitici'}</strong> –{' '}
-                {language === 'cs' ? 'slouží ke zlepšování obsahu a funkčnosti webu (anonymizovaná data)' : language === 'en' ? 'serve to improve the content and functionality of the website (anonymized data)' : 'servono a migliorare il contenuto e la funzionalità del sito (dati anonimizzati)'}
+                {language === 'cs' ? 'nepoužíváme (pokud je v budoucnu zapneme, požádáme o souhlas)' : language === 'en' ? 'not used (if enabled in the future, we will ask for consent)' : 'non utilizzati (se attivati in futuro, chiederemo il consenso)'}
               </li>
             </ul>
+          </section>
+
+          <section>
+            <h2 className="text-2xl font-serif text-primary mb-4">
+              {language === 'cs' ? 'Cookies třetích stran' : language === 'en' ? 'Third‑party cookies' : 'Cookie di terze parti'}
+            </h2>
+            <p className="leading-relaxed">
+              {language === 'cs' && 'Některé vložené prvky (např. mapy nebo sociální sítě) mohou nastavovat vlastní cookies podle zásad třetích stran.'}
+              {language === 'en' && 'Some embedded elements (e.g., maps or social networks) may set their own cookies under third‑party policies.'}
+              {language === 'it' && 'Alcuni elementi incorporati (es. mappe o social network) possono impostare cookie propri secondo le policy di terze parti.'}
+            </p>
           </section>
 
           <section>
@@ -84,38 +75,20 @@ export function CookiesPage() {
           </section>
 
           <section className="pt-8 border-t border-stone-100 mt-8">
-            <h2 className="text-xl font-serif text-stone-400 mb-4 flex items-center gap-2">
-              Debug Info <span className="text-xs bg-stone-100 text-stone-500 px-2 py-1 rounded">Tech</span>
+            <h2 className="text-xl font-serif text-stone-400 mb-4">
+              {language === 'cs' ? 'Správa souhlasů a IP adresa' : language === 'en' ? 'Manage consent & IP address' : 'Gestione consenso e indirizzo IP'}
             </h2>
-            <div className="bg-stone-50 p-4 rounded-lg font-mono text-sm space-y-2 text-stone-600">
-              <div className="flex justify-between">
-                <span>Status:</span>
-                <span className={status.consent ? 'text-green-600 font-bold' : 'text-red-500'}>
-                  {status.consent ? (status.consent === 'accepted' ? 'ACCEPTED' : 'DECLINED') : 'NOT SET'}
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span>Cookie Storage:</span>
-                <span>{status.cookie ? 'Present' : 'Empty'}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Local Storage:</span>
-                <span>{status.local ? 'Present' : 'Empty'}</span>
-              </div>
-              <div className="pt-2 text-xs text-stone-400 break-all">
-                Key: {CONSENT_KEY}
-              </div>
-            </div>
-            <button 
-              onClick={() => {
-                document.cookie = `${CONSENT_KEY}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
-                localStorage.removeItem(CONSENT_KEY);
-                window.location.reload();
-              }}
-              className="mt-4 text-xs text-red-400 hover:text-red-600 underline"
-            >
-              Reset / Clear Data
-            </button>
+            <p className="text-sm text-stone-500">
+              {language === 'cs' && (
+                'Abychom vám zjednodušili opakované návštěvy, ukládáme informaci o vašem souhlasu spolu s vaší veřejnou IP adresou. Pokud navštívíte web z téže IP adresy, znovu vás o souhlas nepožádáme. Nastavení cookies můžete kdykoliv změnit ve svém prohlížeči nebo vymazáním cookies.'
+              )}
+              {language === 'en' && (
+                'To simplify repeat visits, we store your consent information together with your public IP address. If you visit the site again from the same IP, you will not be asked for consent again. You can change cookie settings at any time in your browser or by clearing cookies.'
+              )}
+              {language === 'it' && (
+                'Per semplificare le visite ripetute, memorizziamo il consenso insieme al tuo indirizzo IP pubblico. Se visiti nuovamente il sito dallo stesso IP, non ti verrà richiesto nuovamente il consenso. Puoi modificare le impostazioni dei cookie in qualsiasi momento nel browser o cancellando i cookie.'
+              )}
+            </p>
           </section>
 
         </div>

@@ -52,7 +52,57 @@ export function PrivacyPage() {
               <li>
                 {language === 'cs' ? 'Plnění zákonných povinností (např. účetnictví)' : 'Fulfilling legal obligations (e.g. accounting)'}
               </li>
+              <li>
+                {language === 'cs' ? 'Marketingová komunikace pouze na základě souhlasu' : 'Marketing communication only based on consent'}
+              </li>
             </ul>
+          </section>
+
+          <section>
+            <h2 className="font-bold mb-2 uppercase text-xs text-gray-500 tracking-widest">
+              {language === 'cs' ? 'Zpracovávané údaje' : 'Processed Data'}
+            </h2>
+            <p>
+              {language === 'cs'
+                ? 'Zpracováváme zejména: jméno, e‑mail, telefon, datum a čas rezervace, počet osob, poznámku a případně souhlas s marketingem.'
+                : 'We primarily process: name, email, phone, reservation date/time, number of guests, notes, and optional marketing consent.'}
+            </p>
+          </section>
+
+          <section>
+            <h2 className="font-bold mb-2 uppercase text-xs text-gray-500 tracking-widest">
+              {language === 'cs' ? 'Právní základ' : 'Legal Basis'}
+            </h2>
+            <ul className="list-disc pl-5 mt-2 space-y-1">
+              <li>
+                {language === 'cs' ? 'Plnění smlouvy / předsmluvní opatření (rezervace)' : 'Performance of a contract / pre‑contract steps (reservations)'}
+              </li>
+              <li>
+                {language === 'cs' ? 'Plnění právních povinností' : 'Compliance with legal obligations'}
+              </li>
+              <li>
+                {language === 'cs' ? 'Oprávněný zájem (základní provoz a bezpečnost)' : 'Legitimate interest (basic operations and security)'}
+              </li>
+              <li>
+                {language === 'cs' ? 'Souhlas (newsletter a marketing)' : 'Consent (newsletter and marketing)'}
+              </li>
+            </ul>
+          </section>
+
+          <section>
+            <h2 className="font-bold mb-2 uppercase text-xs text-gray-500 tracking-widest">
+              {language === 'cs' ? 'Příjemci a zpracovatelé' : 'Recipients and Processors'}
+            </h2>
+            <p>
+              {language === 'cs'
+                ? 'Využíváme ověřené zpracovatele, kteří nám pomáhají s provozem webu a e‑mailovou komunikací (např. hosting, databáze, e‑mailový poskytovatel).'
+                : 'We use trusted processors that help operate the website and email communications (e.g., hosting, database, email provider).'}
+            </p>
+            <p className="mt-2">
+              {language === 'cs'
+                ? 'Mezi typické zpracovatele patří: Vercel (hosting), Supabase (databáze a autentizace), Resend (e‑mail).'
+                : 'Typical processors include: Vercel (hosting), Supabase (database and auth), Resend (email).'}
+            </p>
           </section>
 
           <section>
@@ -61,8 +111,8 @@ export function PrivacyPage() {
             </h2>
             <p>
               {language === 'cs'
-                ? 'Osobní údaje uchováváme pouze po dobu nezbytně nutnou k naplnění účelu zpracování nebo po dobu stanovenou zákonem.'
-                : 'We retain personal data only for as long as necessary to fulfill the purpose of processing or for the period required by law.'}
+                ? 'Rezervace obvykle uchováváme po dobu 24 měsíců, marketingové kontakty do odvolání souhlasu a provozní logy po dobu 12 měsíců, pokud právní předpisy nevyžadují delší dobu.'
+                : 'Reservations are typically retained for 24 months, marketing contacts until consent is withdrawn, and operational logs for 12 months, unless a longer period is required by law.'}
             </p>
           </section>
 
@@ -94,7 +144,34 @@ export function PrivacyPage() {
                 ? 'V případě dotazů nebo uplatnění vašich práv nás kontaktujte na:'
                 : 'For any questions or to exercise your rights, please contact us at:'}
             </p>
-            <p className="font-bold mt-2"><a href="mailto:rezervace@altrodatony.com" className="underline hover:text-gray-600">rezervace@altrodatony.com</a></p>
+            <p className="font-bold mt-2"><a href="mailto:tony@altrodatony.com" className="underline hover:text-gray-600">tony@altrodatony.com</a></p>
+          </section>
+
+          <section>
+            <h2 className="font-bold mb-2 uppercase text-xs text-gray-500 tracking-widest">
+              {language === 'cs' ? 'Pověřenec pro ochranu osobních údajů' : 'Data Protection Officer'}
+            </h2>
+            <p>
+              {language === 'cs'
+                ? 'Pověřenec pro ochranu osobních údajů nebyl jmenován.'
+                : 'No Data Protection Officer has been appointed.'}
+            </p>
+          </section>
+
+          <section>
+            <h2 className="font-bold mb-2 uppercase text-xs text-gray-500 tracking-widest">
+              {language === 'cs' ? 'Dozorový úřad' : 'Supervisory Authority'}
+            </h2>
+            <p>
+              {language === 'cs'
+                ? 'Máte právo podat stížnost u Úřadu pro ochranu osobních údajů (ÚOOÚ).'
+                : 'You have the right to lodge a complaint with the Office for Personal Data Protection (ÚOOÚ).'}
+            </p>
+            <p className="mt-2">
+              {language === 'cs'
+                ? 'ÚOOÚ: www.uoou.cz'
+                : 'ÚOOÚ: www.uoou.cz'}
+            </p>
           </section>
 
         </div>
