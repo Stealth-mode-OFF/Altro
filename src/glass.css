@@ -1,0 +1,22 @@
+/* Glassmorphism utilities for Apple Glass 2026 aesthetic */
+.glass-card {
+  background-color: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: blur(var(--glass-blur));
+}
+
+.glass-button {
+  background: linear-gradient(180deg, #ffffffa6 0%, #ffffff66 100%);
+  border: 1px solid var(--glass-border);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+.glass-header {
+  background-color: color-mix(in oklab, var(--background) 85%, transparent);
+  -webkit-backdrop-filter: blur(16px) saturate(110%);
+  backdrop-filter: blur(16px) saturate(110%);
+  border-bottom: 1px solid var(--border-medium);
+}
