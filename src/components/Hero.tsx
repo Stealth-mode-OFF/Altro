@@ -41,13 +41,14 @@ export function Hero() {
         <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/80" />
       </div>
 
-      {/* Content - Centered, minimal overlay */}
+      {/* Content - Centered, glass overlay */}
       <div className="relative z-10 container-custom px-4 sm:px-6 text-center">
+        <div className="glass-card mx-auto max-w-4xl rounded-[var(--radius-3xl)] px-6 sm:px-10 py-6 sm:py-10 bg-clip-padding">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2, ease: [0.25, 0.1, 0.25, 1] }}
-          className="max-w-4xl mx-auto space-y-6 sm:space-y-8"
+          className="space-y-6 sm:space-y-8"
         >
           {/* Main Headline */}
           <h1
@@ -74,7 +75,7 @@ export function Hero() {
 
             <button
               onClick={() => scrollToSection('menu')}
-              className="group bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/30 text-white px-8 sm:px-10 py-4 sm:py-4 transition-all duration-400 hover:border-white/50 active:scale-95 flex items-center justify-center gap-3 min-h-[56px] touch-manipulation"
+              className="group glass-button text-white px-8 sm:px-10 py-4 sm:py-4 transition-all duration-400 hover:border-white/50 active:scale-95 flex items-center justify-center gap-3 min-h-[56px] touch-manipulation"
             >
               <span className="text-base sm:text-lg font-medium">{t('hero.viewMenu')}</span>
               <ArrowRight className="w-5 h-5 flex-shrink-0 opacity-60 transition-all duration-400 group-hover:opacity-100 group-hover:translate-x-1" />
@@ -99,6 +100,7 @@ export function Hero() {
             {' • Út–Ne 11:00–23:00'}
           </motion.div>
         </motion.div>
+        </div>
       </div>
 
       {/* Scroll Indicator - Hidden on mobile */}
