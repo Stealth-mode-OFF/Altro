@@ -144,7 +144,6 @@ export function Footer() {
 
         {/* Bottom Bar: Legal & Copy */}
         <div className="pt-8 border-t border-white/5 flex flex-col-reverse md:flex-row justify-between items-center gap-6">
-          
           <div className="text-stone-600 text-xs flex flex-col md:flex-row items-center gap-4">
             <span>© {currentYear} Cucina di Tony s.r.o.</span>
             <span className="hidden md:inline text-stone-800">•</span>
@@ -152,7 +151,6 @@ export function Footer() {
               Design by <span className="text-stone-500">Figma Make</span>
             </span>
           </div>
-
           <nav className="flex flex-wrap justify-center gap-x-8 gap-y-2">
             <LegalLink onClick={() => navigateToSection('/impressum')}>Impressum</LegalLink>
             <LegalLink onClick={() => navigateToSection('/terms')}>
@@ -164,7 +162,6 @@ export function Footer() {
             <LegalLink onClick={() => navigateToSection('/cookies')}>Cookies</LegalLink>
             <LegalLink href="/admin">Admin</LegalLink>
           </nav>
-
         </div>
       </div>
     </footer>
