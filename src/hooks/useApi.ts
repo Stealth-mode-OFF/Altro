@@ -1,6 +1,6 @@
-import { projectId, publicAnonKey } from '../utils/supabase/info';
+import { SUPABASE_URL, SUPABASE_ANON_KEY } from '../utils/supabase/env';
 
-const API_BASE_URL = `https://${projectId}.supabase.co/functions/v1/make-server-d880a0b3`;
+const API_BASE_URL = `${SUPABASE_URL}/functions/v1/make-server-d880a0b3`;
 
 interface ApiOptions {
   method?: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
@@ -11,7 +11,7 @@ async function apiRequest(endpoint: string, options: ApiOptions = {}) {
   const { method = 'GET', body } = options;
   
   const headers: HeadersInit = {
-    'Authorization': `Bearer ${publicAnonKey}`,
+    'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
     'Content-Type': 'application/json',
   };
 

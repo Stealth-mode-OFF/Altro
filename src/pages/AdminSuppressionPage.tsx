@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { projectId, publicAnonKey } from '../utils/supabase/info';
+import { SUPABASE_URL, SUPABASE_ANON_KEY } from '../utils/supabase/env';
 import { UserX, Upload, AlertCircle, ShieldAlert, Home, ChevronRight } from 'lucide-react';
 import { navigate } from '../utils/router';
 
@@ -24,14 +24,11 @@ export function AdminSuppressionPage() {
   const loadSuppressed = async () => {
     try {
       setLoading(true);
-      const response = await fetch(
-        `https://${projectId}.supabase.co/functions/v1/make-server-d880a0b3/admin/suppression`,
-        {
-          headers: {
-            'Authorization': `Bearer ${publicAnonKey}`,
-          }
+      const response = await fetch(`${SUPABASE_URL}/functions/v1/make-server-d880a0b3/admin/suppression`, {
+        headers: {
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
         }
-      );
+      });
 
       if (!response.ok) throw new Error('Failed to load suppression list');
       const data = await response.json();
@@ -64,17 +61,14 @@ export function AdminSuppressionPage() {
     }
 
     try {
-      const response = await fetch(
-        `https://${projectId}.supabase.co/functions/v1/make-server-d880a0b3/admin/suppression/import`,
-        {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${publicAnonKey}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ emails })
-        }
-      );
+      const response = await fetch(`${SUPABASE_URL}/functions/v1/make-server-d880a0b3/admin/suppression/import`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ emails })
+      });
 
       if (!response.ok) throw new Error('Import failed');
 

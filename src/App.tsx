@@ -10,6 +10,7 @@ import { Footer } from './components/Footer';
 import { ScrollToTop } from './components/ScrollToTop';
 import { MobileNav } from './components/MobileNav';
 import { Router } from './utils/router';
+import { AuthGuard } from './auth/AuthGuard';
 
 // Lazy: admin interface and all route pages
 const AdminPanel = lazy(() => import('./components/AdminPanel').then(m => ({ default: m.AdminPanel })));
@@ -107,10 +108,10 @@ export default function App() {
               { path: '/ochrana-udaju', component: <PrivacyPage /> },
               { path: '/privacy', component: <PrivacyPage /> },
               { path: '/cookies', component: <CookiesPage /> },
-              { path: '/admin', component: <AdminPage /> },
-              { path: '/admin/contacts', component: <AdminContactsPage /> },
-              { path: '/admin/campaigns', component: <AdminCampaignsPage /> },
-              { path: '/admin/suppression', component: <AdminSuppressionPage /> },
+              { path: '/admin', component: <AuthGuard><AdminPage /></AuthGuard> },
+              { path: '/admin/contacts', component: <AuthGuard><AdminContactsPage /></AuthGuard> },
+              { path: '/admin/campaigns', component: <AuthGuard><AdminCampaignsPage /></AuthGuard> },
+              { path: '/admin/suppression', component: <AuthGuard><AdminSuppressionPage /></AuthGuard> },
             ]} />
           </Suspense>
           
