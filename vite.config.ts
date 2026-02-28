@@ -16,6 +16,7 @@
         'react-day-picker@8.10.1': 'react-day-picker',
         'next-themes@0.4.6': 'next-themes',
         'lucide-react@0.487.0': 'lucide-react',
+        'motion/react': path.resolve(__dirname, './node_modules/motion/dist/es/react.mjs'),
         'input-otp@1.4.2': 'input-otp',
         'figma:asset/e22ac4c178d2bbab1324e57e3d6e56436f52bc40.png': path.resolve(__dirname, './src/assets/e22ac4c178d2bbab1324e57e3d6e56436f52bc40.png'),
         'figma:asset/d2f44ae16e31926bf96aef3c5f4e4a3d03368e0a.png': path.resolve(__dirname, './src/assets/d2f44ae16e31926bf96aef3c5f4e4a3d03368e0a.png'),

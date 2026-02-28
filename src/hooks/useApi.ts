@@ -9,9 +9,14 @@ interface ApiOptions {
 
 async function apiRequest(endpoint: string, options: ApiOptions = {}) {
   const { method = 'GET', body } = options;
+  const controller = new AbortController();
+  const timeoutMs = 12000;
+  const timeoutId = window.setTimeout(() => controller.abort(), timeoutMs);
   
   const headers: HeadersInit = {
+    'apikey': publicAnonKey,
     'Authorization': `Bearer ${publicAnonKey}`,
+    'Accept': 'application/json',
     'Content-Type': 'application/json',
   };
 
@@ -19,6 +24,7 @@ async function apiRequest(endpoint: string, options: ApiOptions = {}) {
     method,
     headers,
     mode: 'cors',
+    signal: controller.signal,
   };
 
   if (body && method !== 'GET') {
@@ -38,15 +44,25 @@ async function apiRequest(endpoint: string, options: ApiOptions = {}) {
         errorData = { error: errorText };
       }
       console.error(`❌ API Error (${response.status}):`, errorData);
-      throw new Error(errorData.error || `API error: ${response.status}`);
+      throw new Error(
+        errorData.error ||
+        errorData.message ||
+        `API error: ${response.status}`
+      );
     }
 
     const data = await response.json();
     console.log(`✅ API Success: ${method} ${endpoint}`, data);
     return data;
   } catch (error) {
+    if (error instanceof DOMException && error.name === 'AbortError') {
+      console.error(`❌ API timeout for ${endpoint} after ${timeoutMs}ms`);
+      throw new Error('Požadavek trval příliš dlouho. Zkuste to prosím znovu.');
+    }
     console.error(`❌ API request failed for ${endpoint}:`, error);
     throw error;
+  } finally {
+    window.clearTimeout(timeoutId);
   }
 }
 

@@ -141,6 +141,13 @@ export function Reservation() {
         return;
       }
 
+      const phoneDigits = formData.phone.replace(/\D/g, '');
+      if (phoneDigits.length !== 9) {
+        toast.error(language === 'cs' ? 'Telefon musí mít 9 číslic.' : language === 'it' ? 'Il numero di telefono deve avere 9 cifre.' : 'Phone number must contain 9 digits.');
+        setIsSubmitting(false);
+        return;
+      }
+
       const response = await createReservation({
         ...formData,
         marketingConsent
@@ -191,7 +198,8 @@ export function Reservation() {
       }
     } catch (error) {
       console.error(error);
-      toast.error(t('reservation.error') || "Something went wrong");
+      const errorMessage = error instanceof Error ? error.message : '';
+      toast.error(errorMessage || t('reservation.error') || "Something went wrong");
     } finally {
       setIsSubmitting(false);
     }
