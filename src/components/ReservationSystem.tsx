@@ -140,7 +140,8 @@ export function ReservationSystem() {
         throw new Error('Failed to create reservation');
       }
     } catch (error) {
-      toast.error('Nastala chyba při vytváření rezervace. Zkuste to prosím znovu.');
+      const errorMessage = error instanceof Error ? error.message : '';
+      toast.error(errorMessage || 'Nastala chyba při vytváření rezervace. Zkuste to prosím znovu.');
       console.error('Reservation error:', error);
     } finally {
       setIsSubmitting(false);
