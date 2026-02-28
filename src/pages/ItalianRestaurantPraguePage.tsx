@@ -3,7 +3,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { ImageWithFallback } from '../components/figma/ImageWithFallback';
 import { UtensilsCrossed, Award, ChefHat, Clock, MapPin, Phone } from 'lucide-react';
 import { navigate } from '../utils/router';
-import heroBackground from "figma:asset/25aa2f7917174e5633532ace212d5bcf77b22ebd.png";
+import heroBackground from "../assets/25aa2f7917174e5633532ace212d5bcf77b22ebd.png";
 
 export function ItalianRestaurantPraguePage() {
   const { language } = useLanguage();

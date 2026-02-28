@@ -1,7 +1,7 @@
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { motion } from 'motion/react';
 import { useLanguage } from '../contexts/LanguageContext';
-import pizzaImage from "figma:asset/37bb8a659a4a3f6604f817c626f331b3541fff8a.png";
+import pizzaImage from "../assets/37bb8a659a4a3f6604f817c626f331b3541fff8a.png";
 
 export function FeaturedDish() {
   const { t } = useLanguage();
