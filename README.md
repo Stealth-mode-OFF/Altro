@@ -1,11 +1,28 @@
+# Altro — Restaurant Website
 
-  # Restaurant Website Clone
+> **Live: [altrodatony.com](https://altrodatony.com)**
 
-  This is a code bundle for Restaurant Website Clone. The original project is available at https://www.figma.com/design/IFN3Gh2tjGETLVd2hv9CPS/Restaurant-Website-Clone.
+Modern restaurant website with online reservation system and dynamic menu management.
 
-  ## Running the code
+## Tech Stack
 
-  Run `npm i` to install the dependencies.
+- **React 18** + **TypeScript** + **Vite**
+- **Tailwind CSS** — custom design system
+- **Supabase** — backend, database, real-time
+- **Resend** — transactional emails (booking confirmations)
+- **Vercel** — deployment
 
-  Run `npm run dev` to start the development server.
-  
+## Features
+
+- Animated landing page with parallax effects
+- Online reservation system with email confirmations
+- Dynamic menu with categories and filtering
+- Photo gallery
+- Fully responsive design
+
+## Development
+
+```bash
+npm install
+npm run dev
+```
